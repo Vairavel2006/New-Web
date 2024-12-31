@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Proposal</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb);
+            animation: backgroundAnimation 10s infinite alternate;
+            overflow: hidden;
+        }
+
+        @keyframes backgroundAnimation {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+        }
+
+        img {
+            max-width: 80%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        .message {
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            margin-top: 20px;
+            font-size: 1.5rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        .i-love-you {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: red;
+            font-family: 'Arial', sans-serif;
+            display: none;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .confetti {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="image.png" alt="Special Moment" onclick="showLove()">
+        <div class="message">Happy New Year, Mrs.X! 2025 to Us! 🌟</div>
+        <div class="i-love-you" id="loveMessage">I Love You ❤️</div>
+    </div>
+
+    <canvas class="confetti"></canvas>
+
+    <script>
+        const canvas = document.querySelector('.confetti');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const colors = ['#FFC0CB', '#FFD700', '#ADD8E6', '#98FB98', '#FF69B4'];
+        const confetti = Array.from({ length: 100 }).map(() => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 6 + 1,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            speedY: Math.random() * 3 + 1,
+            speedX: (Math.random() - 0.5) * 2
+        }));
+
+        function drawConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            confetti.forEach(particle => {
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                ctx.fillStyle = particle.color;
+                ctx.fill();
+
+                particle.y += particle.speedY;
+                particle.x += particle.speedX;
+
+                if (particle.y > canvas.height) particle.y = 0;
+                if (particle.x > canvas.width) particle.x = 0;
+                if (particle.x < 0) particle.x = canvas.width;
+            });
+
+            requestAnimationFrame(drawConfetti);
+        }
+
+        drawConfetti();
+
+        function showLove() {
+            const loveMessage = document.getElementById('loveMessage');
+            loveMessage.style.display = 'block';
+
+            let heartContainer = document.createElement('div');
+            heartContainer.style.position = 'absolute';
+            heartContainer.style.top = '0';
+            heartContainer.style.left = '0';
+            heartContainer.style.width = '100%';
+            heartContainer.style.height = '100%';
+            heartContainer.style.pointerEvents = 'none';
+            document.body.appendChild(heartContainer);
+
+            for (let i = 0; i < 50; i++) {
+                let heart = document.createElement('div');
+                heart.textContent = '❤️';
+                heart.style.position = 'absolute';
+                heart.style.fontSize = `${Math.random() * 20 + 20}px`;
+                heart.style.color = 'red';
+                heart.style.left = `${Math.random() * 100}%`;
+                heart.style.top = `${Math.random() * 100}%`;
+                heart.style.animation = `floatUp ${Math.random() * 2 + 3}s linear`; 
+                heartContainer.appendChild(heart);
+
+                heart.addEventListener('animationend', () => {
+                    heartContainer.removeChild(heart);
+                });
+            }
+            setTimeout(() => {
+                document.body.removeChild(heartContainer);
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
